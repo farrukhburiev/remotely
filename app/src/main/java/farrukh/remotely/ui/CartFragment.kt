@@ -1,11 +1,14 @@
 package farrukh.remotely.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import farrukh.remotely.R
+import farrukh.remotely.database.AppDataBase
+import farrukh.remotely.databinding.FragmentCardBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,13 +32,20 @@ class CartFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+    val appDatabase: AppDataBase by lazy {
+        AppDataBase.getInstance(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card, container, false)
+        val binding = FragmentCardBinding.inflate(inflater,container,false)
+
+//        val users = appDatabase.getUserDao().getUser()
+//        Log.d("TAG", "onCreateView: ${user.id_user}")
+
+        return binding.root
     }
 
     companion object {

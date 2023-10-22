@@ -8,7 +8,7 @@ import farrukh.remotely.database.entity.UserData
 
 interface UserDao {
     @Query("select * from userdata")
-    fun getUsers():List<UserData>
+    fun getUser():List<UserData>
 
     @Insert
     fun addUser(userData: UserData)

@@ -1,12 +1,13 @@
 package farrukh.remotely.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import coil.load
 import farrukh.remotely.R
+import farrukh.remotely.database.AppDataBase
 import farrukh.remotely.databinding.FragmentViewItemBinding
 import farrukh.remotely.model.Product
 
@@ -33,18 +34,23 @@ class View_ItemFragment : Fragment() {
         }
     }
 
+    val appDatabase: AppDataBase by lazy {
+        AppDataBase.getInstance(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentViewItemBinding.inflate(inflater,container,false)
+        val binding = FragmentViewItemBinding.inflate(inflater, container, false)
 
         binding.productImg.load(param1!!.thumbnail)
         binding.namae.setText(param1!!.title)
         binding.desc.setText(param1!!.description)
 
         binding.cart.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.main,LoginFragment()).commit()
+
+
         }
 
 

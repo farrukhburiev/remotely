@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import farrukh.remotely.R
 import farrukh.remotely.adapter.ProductAdapter
+import farrukh.remotely.database.AppDataBase
+import farrukh.remotely.database.entity.UserData
 import farrukh.remotely.databinding.FragmentHomeBinding
 import farrukh.remotely.model.Product
 import farrukh.remotely.model.ProductData
@@ -44,6 +46,10 @@ class HomeFragment : Fragment() {
         }
     }
 
+    val appDatabase: AppDataBase by lazy {
+        AppDataBase.getInstance(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +58,10 @@ class HomeFragment : Fragment() {
         discount_products = mutableListOf()
         val api = APIClient.getInstance().create(APIService::class.java)
 
+        if (appDatabase.getUserDao().getUser().size == 0){
+            appDatabase.getUserDao().addUser(UserData(id_user = 0, name = "", password = ""))
+        }
+          var user = appDatabase.getUserDao().getUser()
         api.getAllProducts().enqueue(object : Callback<ProductData> {
             override fun onResponse(call: Call<ProductData>, response: Response<ProductData>) {
 //                Log.d(TAG, "onResponse: ")
@@ -63,6 +73,7 @@ class HomeFragment : Fragment() {
                     var product_adapter =
                         ProductAdapter(discount_products, object : ProductAdapter.ItemClick {
                             override fun OnItemClick(product: Product) {
+
                                 parentFragmentManager.beginTransaction().replace(R.id.main,View_ItemFragment.newInstance(product)).addToBackStack("Home").commit()
                             }
 
@@ -94,10 +105,17 @@ class HomeFragment : Fragment() {
             parentFragmentManager.beginTransaction().replace(R.id.main,SearchFragment()).setReorderingAllowed(true).addToBackStack("Home").commit()
         }
 
-        binding.cart.setOnClickListener{
-//            binding.cart.visibility = View.INVISIBLE
-//            binding.search.visibility = View.INVISIBLE
-            parentFragmentManager.beginTransaction().replace(R.id.main,LoginFragment()).addToBackStack("Home").commit()
+        binding.cart.setOnClickListener {
+            if (user.get(user.size-1).name == ""){
+                parentFragmentManager.beginTransaction().replace(R.id.main, LoginFragment())
+                    .addToBackStack("Home").commit()
+            }
+
+            else parentFragmentManager.beginTransaction().replace(R.id.main, CartFragment())
+                .addToBackStack("Home").commit()
+
+
+
         }
 
 

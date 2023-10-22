@@ -8,6 +8,7 @@ import java.io.Serializable
 class UserData(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+    var id_user:Int ? = null,
     var name:String? = null,
     var password:String? = null
 

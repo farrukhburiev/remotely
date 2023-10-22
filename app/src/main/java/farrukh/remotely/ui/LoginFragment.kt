@@ -55,23 +55,28 @@ class LoginFragment : Fragment() {
 
         val api = APIClient.getInstance().create(APIService::class.java)
 
-        val l = Login(binding.loginOrg.text.toString(), binding.passwordOrg.text.toString())
+        var users = appDatabase.getUserDao().getUser()
+
 
 
 
         binding.continueBtn.setOnClickListener {
+            var l = Login(binding.loginOrg.text.toString().trim(), binding.passwordOrg.text.toString().trim())
             api.login(l).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    appDatabase.getUserDao().addUser(
-                        UserData(
-                           name = binding.loginOrg.text.toString(), password =  binding.passwordOrg.text.toString()
-                        ))
-                    if (appDatabase.getUserDao().getUsers().size > 0){
-                        parentFragmentManager . beginTransaction ().replace(
-                            R.id.main,
-                            CartFragment()
+                    if (response.isSuccessful && response.body() != null) {
+                        appDatabase.getUserDao().addUser(
+                            UserData(
+                                id_user = response.body()!!.id,
+                                name = binding.loginOrg.text.toString(),
+                                password = binding.passwordOrg.text.toString()
+                            )
                         )
-                            .commit()
+
+                        users = appDatabase.getUserDao().getUser()
+                        Log.d("TAG", "onResponse: ${users.get(users.size-1).name+users.get(users.size-1).id_user}")
+                        parentFragmentManager.beginTransaction().replace(R.id.main,CartFragment()).addToBackStack("Login").commit()
+
                     }
 
                     else Toast.makeText(requireContext(), "you have not signed up", Toast.LENGTH_SHORT).show()

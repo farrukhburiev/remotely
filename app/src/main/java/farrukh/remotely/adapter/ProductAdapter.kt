@@ -23,7 +23,7 @@ class ProductAdapter(
         var price = itemView.findViewById<TextView>(R.id.price)
         var rating = itemView.findViewById<TextView>(R.id.rating)
         var img = itemView.findViewById<ImageView>(R.id.img)
-        var like = itemView.findViewById<ImageView>(R.id.like)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
@@ -46,10 +46,7 @@ class ProductAdapter(
         holder.price.text = item.price.toString()
         holder.img.load(item.thumbnail)
 
-        holder.like.setOnClickListener {
-//            listener.OnItemClick(item)
 
-        }
 
         holder.layout.setOnClickListener {
             listener.OnItemClick(item)

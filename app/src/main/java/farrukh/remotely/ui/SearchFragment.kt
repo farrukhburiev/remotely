@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import farrukh.remotely.R
 import farrukh.remotely.adapter.CategoriesAdapter
 import farrukh.remotely.adapter.ProductAdapter
+import farrukh.remotely.database.AppDataBase
 import farrukh.remotely.model.Product
 import farrukh.remotely.model.ProductData
 import farrukh.remotely.networking.APIClient
@@ -40,6 +43,10 @@ class SearchFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+    }
+
+    val appDatabase: AppDataBase by lazy {
+        AppDataBase.getInstance(requireContext())
     }
 
     override fun onCreateView(
@@ -73,17 +80,21 @@ class SearchFragment : Fragment() {
                                 override fun OnItemClick(category: String) {
                                     products.clear()
 
-                                    api.getProductsofCategory(category).enqueue(object : Callback<ProductData>{
-                                        override fun onResponse(
-                                            call: Call<ProductData>,
-                                            response: Response<ProductData>
-                                        ) {
-                                            for (i in response.body()!!.products){
-                                                products.add(i)
-                                            }
+                                    api.getProductsofCategory(category)
+                                        .enqueue(object : Callback<ProductData> {
+                                            override fun onResponse(
+                                                call: Call<ProductData>,
+                                                response: Response<ProductData>
+                                            ) {
+                                                for (i in response.body()!!.products) {
+                                                    products.add(i)
+                                                }
 
-                                            var adapter = ProductAdapter(products,object : ProductAdapter.ItemClick{
+                                                var adapter = ProductAdapter(products,
+                                                    object : ProductAdapter.ItemClick {
                                                 override fun OnItemClick(product: Product) {
+                                                    parentFragmentManager.beginTransaction().replace(
+                                                        R.id.main,View_ItemFragment.newInstance(product)).addToBackStack("Home").commit()
 
                                                 }
 
@@ -120,6 +131,58 @@ class SearchFragment : Fragment() {
 
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
                 Log.d(TAG, "onFailure: $t")
+            }
+
+        })
+        var searched_products = mutableListOf<Product>()
+        binding.sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText !=null) {
+                    searched_products.clear()
+                    api.searchByName(newText).enqueue(object :Callback<ProductData>{
+                        override fun onResponse(
+                            call: Call<ProductData>,
+                            response: Response<ProductData>
+                        ) {
+                            for (i in response.body()!!.products){
+                                if (i.title.toLowerCase().contains(newText.toLowerCase())){
+                                    searched_products.add(i)
+
+                                }
+
+                            }
+
+
+                            if (searched_products.size == 0){
+                                binding.nothingLottie.visibility = View.VISIBLE
+                            }
+                            else binding.nothingLottie.visibility = View.GONE
+                            var adapter = ProductAdapter(searched_products,object :ProductAdapter.ItemClick{
+                                override fun OnItemClick(product: Product) {
+                                    parentFragmentManager.beginTransaction().replace(R.id.main,View_ItemFragment()).addToBackStack("Search").commit()
+                                }
+
+                            })
+                            binding.productsRv.layoutManager = layoutManager
+                            binding.productsRv.adapter = adapter
+
+
+
+                        }
+
+                        override fun onFailure(call: Call<ProductData>, t: Throwable) {
+                            Log.d(TAG, "onFailure: $t")
+                        }
+
+                    })
+                    return true
+                }
+                return false
             }
 
         })
