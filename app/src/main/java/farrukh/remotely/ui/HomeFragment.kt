@@ -68,9 +68,11 @@ class HomeFragment : Fragment() {
         api.getAllProducts().enqueue(object : Callback<ProductData> {
             override fun onResponse(call: Call<ProductData>, response: Response<ProductData>) {
 //                Log.d(TAG, "onResponse: ")
+
+
                 if (response.isSuccessful && response.body() != null){
                     discount_products = response.body()!!.products.toMutableList()
-//                    Log.d(TAG, "onResponse: $discount_products")
+
                     binding.title.text = discount_products.get(0).title
                     binding.cateoryPopularItem.text = discount_products.get(0).category
                     binding.ratingPopularProduct.text = discount_products.get(0).rating.toString()

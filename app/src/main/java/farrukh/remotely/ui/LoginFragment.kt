@@ -75,7 +75,7 @@ class LoginFragment : Fragment() {
 
                         users = appDatabase.getUserDao().getUser()
                         Log.d("TAG", "onResponse: ${users.get(users.size-1).name+users.get(users.size-1).id_user}")
-                        parentFragmentManager.beginTransaction().replace(R.id.main,CartFragment()).addToBackStack("Login").commit()
+                        parentFragmentManager.beginTransaction().replace(R.id.main,CartFragment()).commit()
 
                     }
 

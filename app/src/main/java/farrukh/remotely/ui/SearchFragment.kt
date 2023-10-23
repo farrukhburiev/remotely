@@ -62,7 +62,7 @@ class SearchFragment : Fragment() {
 
 
 
-        var layoutManager = GridLayoutManager(requireContext(),2,LinearLayoutManager.HORIZONTAL,false)
+        var layoutManager = GridLayoutManager(requireContext(),2,LinearLayoutManager.VERTICAL,false)
         val api = APIClient.getInstance().create(APIService::class.java)
         var categories = mutableListOf<String>()
         api.getAllCategories().enqueue(object : Callback<List<String>> {
@@ -70,9 +70,6 @@ class SearchFragment : Fragment() {
                 for (i in 0 until response.body()!!.size) {
                     categories.add(response.body()!!.get(i))
                 }
-
-
-
                 if (categories.isNotEmpty()) {
                     var adapter =
                         CategoriesAdapter(
@@ -96,7 +93,7 @@ class SearchFragment : Fragment() {
                                                     object : ProductAdapter.ItemClick {
                                                 override fun OnItemClick(product: Product) {
                                                     parentFragmentManager.beginTransaction().replace(
-                                                        R.id.main,View_ItemFragment.newInstance(product)).addToBackStack("Home").commit()
+                                                        R.id.main,View_ItemFragment.newInstance(product)).addToBackStack("Search").commit()
 
                                                 }
 

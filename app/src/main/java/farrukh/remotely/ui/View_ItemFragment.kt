@@ -56,9 +56,9 @@ class View_ItemFragment : Fragment() {
         binding.cart.setOnClickListener {
 
             if (user.get(user.size - 1).name == "") {
-                parentFragmentManager.beginTransaction().replace(R.id.main,LoginFragment()).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.main,LoginFragment()).addToBackStack("Product").commit()
             } else {
-                parentFragmentManager.beginTransaction().replace(R.id.main,CartFragment()).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.main,CartFragment()).addToBackStack("Product").commit()
 
             }
         }

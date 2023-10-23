@@ -31,44 +31,77 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_back_fab" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/user_account_info_parent"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
         android:layout_width="match_parent"
+        android:layout_height="250dp"
+
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/login_hello" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="56dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+
+        android:layout_marginTop="32dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:endIconMode="clear_text"
+        android:enabled="false"
+        app:helperTextTextColor="#BA2424"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_back_fab">
+        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/user_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_launcher_background" />
-
-        <TextView
-            android:id="@+id/user_name"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userName"
+            android:enabled="false"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Firstname Lastname"
-            android:layout_marginTop="32dp"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/gilroyregular"
+            />
 
-        <TextView
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:enabled="false"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:endIconMode="clear_text"
+
+
+        app:helperTextTextColor="#BA2424"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:enabled="false"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
-            android:text="username"
-            android:layout_marginTop="32dp"
-            android:textSize="24sp" />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:fontFamily="@font/gilroyregular"
+             />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/user_log_in_out"
