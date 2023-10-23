@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import coil.load
 import farrukh.remotely.R
+import farrukh.remotely.ViewPagerAdapter
 import farrukh.remotely.database.AppDataBase
 import farrukh.remotely.databinding.FragmentViewItemBinding
 import farrukh.remotely.model.Product
@@ -44,13 +44,23 @@ class View_ItemFragment : Fragment() {
     ): View? {
         val binding = FragmentViewItemBinding.inflate(inflater, container, false)
 
-        binding.productImg.load(param1!!.thumbnail)
+//        binding.productImg.load(param1!!.thumbnail)
+
+        var adapter = ViewPagerAdapter(param1!!.images)
+
+        binding.productImgViewPager.adapter = adapter
+
         binding.namae.setText(param1!!.title)
         binding.desc.setText(param1!!.description)
-
+        val user = appDatabase.getUserDao().getUser()
         binding.cart.setOnClickListener {
 
+            if (user.get(user.size - 1).name == "") {
+                parentFragmentManager.beginTransaction().replace(R.id.main,LoginFragment()).commit()
+            } else {
+                parentFragmentManager.beginTransaction().replace(R.id.main,CartFragment()).commit()
 
+            }
         }
 
 
