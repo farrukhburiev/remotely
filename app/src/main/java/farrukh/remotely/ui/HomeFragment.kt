@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import farrukh.remotely.R
+import farrukh.remotely.adapter.CartproductAdapter
 import farrukh.remotely.adapter.ProductAdapter
 import farrukh.remotely.database.AppDataBase
 import farrukh.remotely.database.entity.UserData
 import farrukh.remotely.databinding.FragmentHomeBinding
+import farrukh.remotely.model.CartProduct
 import farrukh.remotely.model.Product
 import farrukh.remotely.model.ProductData
 import farrukh.remotely.networking.APIClient
@@ -67,8 +70,16 @@ class HomeFragment : Fragment() {
 //                Log.d(TAG, "onResponse: ")
                 if (response.isSuccessful && response.body() != null){
                     discount_products = response.body()!!.products.toMutableList()
-                    Log.d(TAG, "onResponse: $discount_products")
+//                    Log.d(TAG, "onResponse: $discount_products")
+                    binding.title.text = discount_products.get(0).title
+                    binding.cateoryPopularItem.text = discount_products.get(0).category
+                    binding.ratingPopularProduct.text = discount_products.get(0).rating.toString()
+                    binding.popularProductImg.load(discount_products.get(0).thumbnail)
+//                    binding.title.text = discount_products.get(0).title
 
+                    binding.button2.setOnClickListener {
+                        parentFragmentManager.beginTransaction().replace(R.id.main,View_ItemFragment.newInstance(discount_products.get(0))).addToBackStack("Home").commit()
+                    }
 //
                     var product_adapter =
                         ProductAdapter(discount_products, object : ProductAdapter.ItemClick {
@@ -119,6 +130,13 @@ class HomeFragment : Fragment() {
         }
 
 
+        binding.userImg.setOnClickListener{
+            parentFragmentManager.beginTransaction().replace(R.id
+                .main,ProfileFragment()).addToBackStack("Home").commit()
+        }
+
+        binding.textView5
+            .setText("Hello, "+ user.get(user.size-1).name)
 
 
 

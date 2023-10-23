@@ -6,9 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import farrukh.remotely.R
+import farrukh.remotely.adapter.CartproductAdapter
 import farrukh.remotely.database.AppDataBase
 import farrukh.remotely.databinding.FragmentCardBinding
+import farrukh.remotely.model.CartData
+import farrukh.remotely.model.CartProduct
+import farrukh.remotely.networking.APIClient
+import farrukh.remotely.networking.APIService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,9 +51,38 @@ class CartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentCardBinding.inflate(inflater,container,false)
+        val user = appDatabase.getUserDao().getUser().get(appDatabase.getUserDao().getUser().size-1)
+        val api = APIClient.getInstance().create(APIService::class.java)
+        var cart_products = mutableListOf<CartProduct>()
 
-//        val users = appDatabase.getUserDao().getUser()
-//        Log.d("TAG", "onCreateView: ${user.id_user}")
+        Log.d("TAG", "onCreateView: ${appDatabase.getUserDao().getUser().get(appDatabase.getUserDao().getUser().size-1).name}")
+
+        api.getCartsOfUser(user.id_user!!).enqueue(object :Callback<CartData>{
+            override fun onResponse(call: Call<CartData>, response: Response<CartData>) {
+                for (i in response.body()!!.carts[0].products){
+                    cart_products.add(i)
+                }
+
+                var adapter = CartproductAdapter(cart_products,object :CartproductAdapter.ItemClick{
+                    override fun OnItemClick(product: CartProduct) {
+
+                    }
+                })
+                var layoutManager = LinearLayoutManager(requireContext(),
+                    LinearLayoutManager.VERTICAL,false)
+
+                binding.cartProduct.layoutManager = layoutManager
+                binding.cartProduct.adapter = adapter
+
+
+                Log.d("TAG", "onResponse:${cart_products} ")
+            }
+
+            override fun onFailure(call: Call<CartData>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
 
         return binding.root
     }

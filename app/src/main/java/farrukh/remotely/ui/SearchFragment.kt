@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import farrukh.remotely.R
 import farrukh.remotely.adapter.CategoriesAdapter
+import farrukh.remotely.adapter.CartproductAdapter
 import farrukh.remotely.adapter.ProductAdapter
 import farrukh.remotely.database.AppDataBase
+import farrukh.remotely.model.CartProduct
 import farrukh.remotely.model.Product
 import farrukh.remotely.model.ProductData
 import farrukh.remotely.networking.APIClient
